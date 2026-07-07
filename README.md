@@ -1,13 +1,13 @@
 # MarineBio-Net: Automated Bioacoustic Classification for Marine Mammals 🌊🐋
 
-An end-to-end Machine Learning pipeline designed to automate the monitoring and identification of marine mammal species using deep learning techniques on bioacoustic data. By processing Mel-frequency cepstral coefficients (MFCC) spectrograms, this system successfully classifies 33 different species.
+An end-to-end Machine Learning pipeline designed to automate the monitoring and identification of marine mammal species using deep learning techniques on bioacoustic data. By processing Mel-frequency cepstral coefficients (MFCC) spectrograms, this system successfully classifies 32 different species.
 
 ## Project Overview
 - **Objective:** Automated classification of marine mammal audio recordings for passive acoustic monitoring (PAM).
 - **Data Source:** Watkins Marine Mammal Sound Database (extracted via Hugging Face).
 - **Dataset Size:** 1,086 audio files converted into 64x64 grayscale MFCC spectrograms.
 - **Model Architecture:** Custom 3-layer Convolutional Neural Network (CNN) optimized for audio-visual feature mapping.
-- **Performance:** Reached a peak classification accuracy/F1-score of ~85% across 33 highly imbalanced and acoustically complex classes.
+- **Performance:** Reached a peak classification accuracy/F1-score of ~85% across 32 highly imbalanced and acoustically complex classes.
 
 ## Pipeline Architecture
 1. **Data Acquisition (`download_data.py`):** Automatically connects to Hugging Face, streams raw audio bytes from the Watkins database, and organizes them into species-specific directories while bypassing heavy external dependencies.
