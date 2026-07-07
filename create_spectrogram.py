@@ -4,39 +4,43 @@ import librosa.display
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Η διαδρομή σου
+# Path definition (WARNING: Change "CHANGE ME" to your actual Windows username)
 base_path = r"C:\Users\CHANGE ME\Desktop\Vaquita_Acoustic_Monitoring_AI"
 data_path = os.path.join(base_path, "data")
 
-print("Εκκίνηση δημιουργίας χαρακτηριστικών AI (MFCC Spectrograms)...")
+print("Starting MFCC Spectrogram generation for AI training...")
 
-# Σάρωση όλων των υποφακέλων
+# Scan all subfolders
 for root, dirs, files in os.walk(data_path):
     for file in files:
         if file.endswith(".wav"):
             file_path = os.path.join(root, file)
             
+            # Avoid re-processing if the image already exists
+            output_name = file.replace('.wav', '_mfcc.png')
+            if os.path.exists(os.path.join(root, output_name)):
+                continue
+            
             try:
-                # Φόρτωση ήχου μέσω της αυτόνομης librosa
+                # Load audio using librosa
                 y, sr = librosa.load(file_path, sr=None)
                 
                 if len(y) == 0:
                     continue
                 
-                # Εξαγωγή MFCCs
+                # Extract MFCC features
                 mfccs = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13)
                 
-                # Δημιουργία Γραφήματος
+                # Create the plot
                 plt.figure(figsize=(10, 4))
                 librosa.display.specshow(mfccs, sr=sr, x_axis='time')
                 plt.title(f'MFCC: {file}')
                 
-                # Αποθήκευση εικόνας .png στον ίδιο φάκελο
-                output_name = file.replace('.wav', '_mfcc.png')
+                # Save as .png in the same folder
                 plt.savefig(os.path.join(root, output_name), bbox_inches='tight')
                 plt.close() 
                 
             except Exception as e:
-                print(f"[ΣΦΑΛΜΑ ΑΝΑΛΥΣΗΣ] Πρόβλημα στο {file} (Παραβλέπεται): {e}")
+                print(f"[ANALYSIS ERROR] Problem with {file} (Skipping): {e}")
 
-print("\n[ΕΠΙΤΥΧΙΑ] Τα γραφήματα MFCC δημιουργήθηκαν επιτυχώς!")
+print("\n[SUCCESS] MFCC spectrograms have been successfully generated!")

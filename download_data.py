@@ -1,44 +1,44 @@
 import os
 import datasets
 
-# Η διαδρομή σου (ΠΡΟΣΟΧΗ: Άλλαξε το "CHANGE ME" στο δικό σου όνομα χρήστη Windows)
+# Path definition 
 base_path = r"C:\Users\CHANGE ME\Desktop\Vaquita_Acoustic_Monitoring_AI"
 data_path = os.path.join(base_path, "data")
 os.makedirs(data_path, exist_ok=True)
 
-print("Σύνδεση στο Hugging Face για λήψη του Watkins Database...")
+print("Connecting to Hugging Face to download the Watkins Database...")
 
 try:
-    # Φορτώνουμε το dataset
+    # Load the dataset
     raw_dataset = datasets.load_dataset("confit/wmms-parquet", split="train")
     
-    # Απενεργοποιούμε ρητά την αποκωδικοποίηση ήχου για να μην ζητάει Torch/FFmpeg
+    # Explicitly disable audio decoding to avoid external dependencies like Torch/FFmpeg
     dataset = raw_dataset.cast_column("audio", datasets.features.Audio(decode=False))
     
-    print("Τα δεδομένα φορτώθηκαν! Εκκίνηση ασφαλούς εξαγωγής των αρχείων .wav...")
+    print("Dataset loaded! Starting safe extraction of .wav files...")
     
     for i, item in enumerate(dataset):
         species_name = item['species'] 
         
-        # Παίρνουμε τα ωμά bytes του ήχου
+        # Get raw audio bytes
         audio_bytes = item['audio']['bytes']
         
-        # Δημιουργία φακέλου για το κάθε είδος ζώου
+        # Create a folder for each species
         species_folder = os.path.join(data_path, species_name)
         os.makedirs(species_folder, exist_ok=True)
         
-        # Ορισμός της τελικής διαδρομής του αρχείου .wav
+        # Define the final .wav file path
         file_path = os.path.join(species_folder, f"{species_name}_{i}.wav")
         
-        # Αποθήκευση των bytes ως κανονικό αρχείο ήχου .wav στον δίσκο
+        # Save raw bytes as a .wav file to the disk
         with open(file_path, 'wb') as f:
             f.write(audio_bytes)
         
-        # Ενημέρωση προόδου ανά 200 αρχεία
+        # Progress update every 200 files
         if (i + 1) % 200 == 0:
-            print(f"Αποθηκεύτηκαν επιτυχώς {i + 1} αρχεία ήχου...")
+            print(f"Successfully saved {i + 1} audio files...")
 
-    print(f"\n[ΕΠΙΤΥΧΙΑ] Όλοι οι ήχοι εξαχθήκαν και οργανώθηκαν στον φάκελο: {data_path}")
+    print(f"\n[SUCCESS] All audio files extracted and organized in: {data_path}")
 
 except Exception as e:
-    print(f"\n[ΣΦΑΛΜΑ ΛΗΨΗΣ]: {e}")
+    print(f"\n[DOWNLOAD ERROR]: {e}")
