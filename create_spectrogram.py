@@ -4,7 +4,7 @@ import librosa.display
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Path definition (WARNING: Change "CHANGE ME" to your actual Windows username)
+# Path definition 
 base_path = r"C:\Users\CHANGE ME\Desktop\Vaquita_Acoustic_Monitoring_AI"
 data_path = os.path.join(base_path, "data")
 
